@@ -12,20 +12,16 @@ import { Brands } from '../components/Brands.jsx'
 import { Blog } from '../components/Blog'
 import { Footer } from '../components/Footer.jsx'
 import { ScrollUpButton } from '../components/ScrollUpButton'
-
+import { TabsAccordion } from '../components/TabsAccordion.jsx'
+const items = [
+  { title: "Section 1", content: "Content for Section 1" },
+  { title: "Section 2", content: "Content for Section 2" },
+  { title: "Section 3", content: "Content for Section 3" },
+];
 ---
 
 <Layout title="Tailcast">
-  <Navbar client:load />
-  <Hero client:load />
-  <Features1 client:load />
-  <Features2 client:load />
-  <FeaturesDiagonal client:load />
-  <Pricing client:load />
-  <Brands client:load />
-  <Testimonials client:load />
-  <Blog client:load />
-  <FAQ client:load /> 
-  <Footer />
-  <ScrollUpButton client:load />
+
+    <TabsAccordion />
+  
 </Layout>
