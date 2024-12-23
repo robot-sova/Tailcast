@@ -1,103 +1,212 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 export const TabsAccordion = () => {
-  // Define the tabs with their respective data
-  const tabs = [
+  const [isMobile, setIsMobile] = useState(false);
+  const [activeTab, setActiveTab] = useState("content1");
+
+  const items = [
     {
+      id: "content1",
       title: "Air Conditioner Repair",
-      content:
-        "Air conditioners are probably one of man’s greatest inventions. If you need your air conditioner to function as long as possible and without trouble, you will have to service them regularly and maintain them.",
-      image: "https://via.placeholder.com/600x300?text=Air+Conditioner+Repair",
-      cta: "Fix My Air Conditioner",
+      img: "air-conditioner.jpg",
+      description:
+        "Air conditioners are probably one of man’s greatest inventions. To keep them working properly, regular maintenance is required.",
+      button: "Fix My Air Conditioner",
     },
     {
+      id: "content2",
       title: "Cooktop Repair",
-      content:
-        "Your cooktop is essential for your daily cooking needs. Ensure it’s in top condition to avoid disruption in your kitchen routine.",
-      image: "https://via.placeholder.com/600x300?text=Cooktop+Repair",
-      cta: "Fix My Cooktop",
+      img: "cooktop.jpg",
+      description:
+        "Cooktops require regular maintenance to ensure optimal performance.",
+      button: "Fix My Cooktop",
     },
     {
+      id: "content3",
       title: "Dishwasher Repair",
-      content:
-        "A properly working dishwasher saves time and effort. Get your dishwasher repaired today to avoid kitchen chaos.",
-      image: "https://via.placeholder.com/600x300?text=Dishwasher+Repair",
-      cta: "Fix My Dishwasher",
+      img: "dishwasher.jpg",
+      description:
+        "A properly functioning dishwasher saves time and energy.",
+      button: "Fix My Dishwasher",
+    },
+    {
+      id: "content4",
+      title: "Dryer Repair",
+      img: "dryer.jpg",
+      description:
+        "Dryers need periodic checks and maintenance to ensure efficiency.",
+      button: "Fix My Dryer",
     },
   ];
 
-  // State to track the currently active tab
-  const [activeIndex, setActiveIndex] = useState(0);
+  // Handle window resize to toggle between mobile and desktop layouts
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
 
-  // Function to handle tab clicks
-  const handleTabClick = (index) => {
-    setActiveIndex(index);
+    handleResize(); // Check on component mount
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  const handleAccordionClick = (id) => {
+    setActiveTab(activeTab === id ? null : id); // Toggle accordion content
   };
 
   return (
-    <div style={{ display: "flex", maxWidth: "1200px", margin: "0 auto" }}>
-      {/* Sidebar for tabs */}
-      <div
-        style={{
-          flex: "1",
-          backgroundColor: "#0a74da",
-          color: "white",
-          padding: "1rem",
-        }}
-      >
-        {tabs.map((tab, index) => (
-          <button
-            key={index}
-            onClick={() => handleTabClick(index)}
+    <div
+      style={{
+        maxWidth: "1200px",
+        margin: "20px auto",
+        border: "1px solid #ccc",
+        borderRadius: "5px",
+        overflow: "hidden",
+        fontFamily: "Arial, sans-serif",
+      }}
+    >
+      {/* Desktop Tabs Layout */}
+      {!isMobile && (
+        <div style={{ display: "flex" }}>
+          <div
             style={{
-              display: "block",
-              backgroundColor: activeIndex === index ? "#0747a1" : "transparent",
+              flex: "1",
+              backgroundColor: "#003366",
               color: "white",
-              padding: "1rem",
-              border: "none",
-              textAlign: "left",
-              cursor: "pointer",
-              width: "100%",
-              fontSize: "1rem",
+              display: "flex",
+              flexDirection: "column",
+              padding: "0",
             }}
           >
-            {tab.title}
-          </button>
-        ))}
-      </div>
+            {items.map((item) => (
+              <div
+                key={item.id}
+                onClick={() => setActiveTab(item.id)}
+                style={{
+                  padding: "15px",
+                  cursor: "pointer",
+                  textAlign: "left",
+                  borderBottom: "1px solid #004080",
+                  backgroundColor: activeTab === item.id ? "#004080" : "transparent",
+                  transition: "background-color 0.3s ease",
+                }}
+              >
+                {item.title}
+              </div>
+            ))}
+          </div>
+          <div style={{ flex: "3", padding: "20px", backgroundColor: "#ffffff" }}>
+            {items
+              .filter((item) => item.id === activeTab)
+              .map((item) => (
+                <div key={item.id}>
+                  <h2>{item.title}</h2>
+                  <img
+                    src={item.img}
+                    alt={item.title}
+                    style={{
+                      width: "100%",
+                      maxWidth: "400px",
+                      height: "auto",
+                      marginBottom: "20px",
+                      borderRadius: "5px",
+                    }}
+                  />
+                  <p>{item.description}</p>
+                  <button
+                    style={{
+                      padding: "10px 20px",
+                      backgroundColor: "#004080",
+                      color: "white",
+                      border: "none",
+                      borderRadius: "5px",
+                      cursor: "pointer",
+                      marginTop: "10px",
+                    }}
+                  >
+                    {item.button}
+                  </button>
+                </div>
+              ))}
+          </div>
+        </div>
+      )}
 
-      {/* Content area */}
-      <div
-        style={{
-          flex: "3",
-          backgroundColor: "#f3f4f6",
-          padding: "1.5rem",
-        }}
-      >
-        <img
-          src={tabs[activeIndex].image}
-          alt={tabs[activeIndex].title}
-          style={{
-            width: "100%",
-            maxHeight: "300px",
-            objectFit: "cover",
-            marginBottom: "1rem",
-          }}
-        />
-        <p style={{ marginBottom: "1rem" }}>{tabs[activeIndex].content}</p>
-        <button
-          style={{
-            backgroundColor: "#0a74da",
-            color: "white",
-            padding: "0.8rem 1.5rem",
-            border: "none",
-            cursor: "pointer",
-            fontSize: "1rem",
-          }}
-        >
-          {tabs[activeIndex].cta}
-        </button>
-      </div>
+      {/* Mobile Accordion Layout */}
+      {isMobile && (
+        <div>
+          {items.map((item) => (
+            <div
+              key={item.id}
+              style={{
+                borderBottom: "1px solid #ccc",
+                marginBottom: "10px",
+                backgroundColor: "#003366",
+                color: "white",
+                borderRadius: "5px",
+                overflow: "hidden",
+              }}
+            >
+              {/* Accordion Header */}
+              <div
+                onClick={() => handleAccordionClick(item.id)}
+                style={{
+                  padding: "15px",
+                  cursor: "pointer",
+                  backgroundColor: activeTab === item.id ? "#004080" : "#003366",
+                  transition: "background-color 0.3s ease",
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                }}
+              >
+                {item.title}
+                <span style={{ fontSize: "1.5rem", marginLeft: "10px" }}>
+                  {activeTab === item.id ? "−" : "+"}
+                </span>
+              </div>
+
+              {/* Accordion Content */}
+              {activeTab === item.id && (
+                <div
+                  style={{
+                    padding: "15px",
+                    backgroundColor: "#ffffff",
+                    color: "#000",
+                  }}
+                >
+                  <h2>{item.title}</h2>
+                  <img
+                    src={item.img}
+                    alt={item.title}
+                    style={{
+                      width: "100%",
+                      maxWidth: "400px",
+                      height: "auto",
+                      marginBottom: "20px",
+                      borderRadius: "5px",
+                    }}
+                  />
+                  <p>{item.description}</p>
+                  <button
+                    style={{
+                      padding: "10px 20px",
+                      backgroundColor: "#004080",
+                      color: "white",
+                      border: "none",
+                      borderRadius: "5px",
+                      cursor: "pointer",
+                      marginTop: "10px",
+                    }}
+                  >
+                    {item.button}
+                  </button>
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 };
